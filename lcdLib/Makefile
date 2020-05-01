@@ -13,6 +13,13 @@ libLcd.a: font-11x16.o font-5x7.o font-8x12.o lcdutils.o lcddraw.o
 
 lcddraw.o: lcddraw.c lcddraw.h lcdutils.h
 lcdutils.o: lcdutils.c lcdutils.h
+led.o: led.c led.h 
+song.s: song.h song.c
+buzzer.o: buzzer.c buzzer.h
+toyMain.o: buzzer.h lcddraw.c lcddraw.h lcdutils.h
+wdInterruptHandler.o: stateMachines.h
+stateMachines.o: led.h  stateMachines.h song.h 
+shapes.o: shapes.c shapes.h
 
 install: libLcd.a
 	mkdir -p ../h ../lib
@@ -29,11 +36,14 @@ lcdx.elf: lcdx.o libLcd.a
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ -lTimer
 lcdshape.elf: lcdshape.o libLcd.a
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ -lTimer
+lcdtoy.elf: ${COMMON_OBJECTS} p1_interrupt_handler.o song.s led.o switches.o buzzer.o wdInterruptHandler.o stateMachines.o toyMain.o shapes.o libLcd.a
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ -lTimer
 
-
-load: lcddemo.elf
+load: lcddemo.elfx
 	msp430loader.sh $^
 loadx: lcdx.elf
 	msp430loader.sh $^
 loadshape: lcdshape.elf
+	msp430loader.sh $^
+loadtoy: lcdtoy.elf
 	msp430loader.sh $^
