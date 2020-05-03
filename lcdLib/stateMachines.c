@@ -16,8 +16,9 @@ static int tcol,trow,sqcol,sqrow;
 char unsigned red_on =0, green_on = 0, led_changed = 0;
 
 int scale[] = {2093,1975,1760,1567,1396,1318,1174};
-int colpos[] = {10,60,10,60,50};
-int rowpos[] = {10,10,90,90,50};
+int colpos[] = {10,50,10,50,10,50};
+int rowpos[] = {10,10,20,20,40,40};
+int lidpos[] = {110,95,85,75,60,55,40};
 void state_advance(){
   int button = 0;
   switch(buttonSelect(button))
@@ -25,7 +26,7 @@ void state_advance(){
     case 1:
       led_update();
       if(pos != sizeof(colpos)){
-	square(colpos[pos],rowpos[pos],COLOR_BLUE);
+	rhombus(colpos[pos],rowpos[pos],COLOR_BLUE);
       pos++;
       }else if(pos == sizeof(colpos)){
 	pos=0;
@@ -39,10 +40,10 @@ void state_advance(){
 	  square(40,110,COLOR_YELLOW);
 
 	  /*Lid Open*/
-	  if(i != sizeof(rowpos))
+	  if(i != sizeof(lidpos))
 	 {
 	   buzzer_set_period(scale[i]);
-	   lid(40,rowpos[i],COLOR_WHITE);
+	   lid(40,lidpos[i],COLOR_WHITE);
 	   i++;
 	   clearScreen(COLOR_BROWN);
 	 }
@@ -53,7 +54,7 @@ void state_advance(){
 	  /*Lid Close*/
 	  if(i != 0){
 	    buzzer_set_period(scale[i]);
-	    lid(40,rowpos[i],COLOR_BLACK);
+	    lid(40,lidpos[i],COLOR_BLACK);
 	    i--;
 	    clearScreen(COLOR_BROWN);
 	  }
